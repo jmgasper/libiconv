@@ -195,6 +195,10 @@ realpath_stk (const char *name, char *resolved, struct realpath_bufs *bufs)
   char const *start;
   char const *end;
   int num_links = 0;
+  char *rname = bufs->rname.data;
+  bool end_in_extra_buffer = false;
+  bool failed = true;
+  idx_t prefix_len;
 
   if (name == NULL)
     {
@@ -214,13 +218,9 @@ realpath_stk (const char *name, char *resolved, struct realpath_bufs *bufs)
       return NULL;
     }
 
-  char *rname = bufs->rname.data;
-  bool end_in_extra_buffer = false;
-  bool failed = true;
-
   /* This is always zero for Posix hosts, but can be 2 for MS-Windows
      and MS-DOS X:/foo/bar file names.  */
-  idx_t prefix_len = FILE_SYSTEM_PREFIX_LEN (name);
+  prefix_len = FILE_SYSTEM_PREFIX_LEN (name);
 
   if (!IS_ABSOLUTE_FILE_NAME (name))
     {
@@ -255,6 +255,7 @@ realpath_stk (const char *name, char *resolved, struct realpath_bufs *bufs)
 
   for ( ; *start; start = end)
     {
+      idx_t startlen;
       /* Skip sequence of multiple file name separators.  */
       while (ISSLASH (*start))
         ++start;
@@ -265,7 +266,7 @@ realpath_stk (const char *name, char *resolved, struct realpath_bufs *bufs)
 
       /* Length of this file name component; it can be zero if a file
          name ends in '/'.  */
-      idx_t startlen = end - start;
+      startlen = end - start;
 
       if (startlen == 0)
         break;
@@ -299,13 +300,13 @@ realpath_stk (const char *name, char *resolved, struct realpath_bufs *bufs)
 
           dest = __mempcpy (dest, start, startlen);
           *dest = '\0';
-
+         {
           char *buf;
           ssize_t n;
           while (true)
             {
-              buf = bufs->link.data;
               idx_t bufsize = bufs->link.length;
+              buf = bufs->link.data;
               n = __readlink (rname, buf, bufsize - 1);
               if (n < bufsize - 1)
                 break;
@@ -314,6 +315,9 @@ realpath_stk (const char *name, char *resolved, struct realpath_bufs *bufs)
             }
           if (0 <= n)
             {
+              char *extra_buf = bufs->extra.data;
+              idx_t end_idx IF_LINT (= 0);
+              size_t len;
               if (++num_links > __eloop_threshold ())
                 {
                   __set_errno (ELOOP);
@@ -322,11 +326,9 @@ realpath_stk (const char *name, char *resolved, struct realpath_bufs *bufs)
 
               buf[n] = '\0';
 
-              char *extra_buf = bufs->extra.data;
-              idx_t end_idx IF_LINT (= 0);
               if (end_in_extra_buffer)
                 end_idx = end - extra_buf;
-              size_t len = strlen (end);
+              len = strlen (end);
               if (INT_ADD_OVERFLOW (len, n))
                 {
                   __set_errno (ENOMEM);
@@ -377,6 +379,7 @@ realpath_stk (const char *name, char *resolved, struct realpath_bufs *bufs)
                       ? dir_check (rname, dest)
                       : errno == EINVAL))
             goto error;
+          }
         }
     }
   if (dest > rname + prefix_len + 1 && ISSLASH (dest[-1]))

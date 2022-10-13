@@ -55,6 +55,7 @@ rpl_readlink (char const *file, char *buf, size_t bufsize)
 {
 # if READLINK_TRAILING_SLASH_BUG
   size_t file_len = strlen (file);
+  ssize_t r;
   if (file_len && file[file_len - 1] == '/')
     {
       /* Even if FILE without the slash is a symlink to a directory,
@@ -69,7 +70,7 @@ rpl_readlink (char const *file, char *buf, size_t bufsize)
     }
 # endif /* READLINK_TRAILING_SLASH_BUG */
 
-  ssize_t r = readlink (file, buf, bufsize);
+  r = readlink (file, buf, bufsize);
 
 # if READLINK_TRUNCATE_BUG
   if (r < 0 && errno == ERANGE)

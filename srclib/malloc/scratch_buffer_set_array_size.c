@@ -29,6 +29,7 @@ __libc_scratch_buffer_set_array_size (struct scratch_buffer *buffer,
 				      size_t nelem, size_t size)
 {
   size_t new_length = nelem * size;
+  char *new_ptr;
 
   /* Avoid overflow check if both values are small. */
   if ((nelem | size) >> (sizeof (size_t) * CHAR_BIT / 2) != 0
@@ -48,7 +49,7 @@ __libc_scratch_buffer_set_array_size (struct scratch_buffer *buffer,
   /* Discard old buffer.  */
   scratch_buffer_free (buffer);
 
-  char *new_ptr = malloc (new_length);
+  new_ptr = malloc (new_length);
   if (new_ptr == NULL)
     {
       /* Buffer must remain valid to free.  */

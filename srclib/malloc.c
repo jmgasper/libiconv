@@ -31,6 +31,7 @@
 void *
 rpl_malloc (size_t n)
 {
+  void *result;
 #if !HAVE_MALLOC_0_NONNULL
   if (n == 0)
     n = 1;
@@ -45,7 +46,7 @@ rpl_malloc (size_t n)
     }
 #endif
 
-  void *result = malloc (n);
+  result = malloc (n);
 
 #if !HAVE_MALLOC_POSIX
   if (result == NULL)

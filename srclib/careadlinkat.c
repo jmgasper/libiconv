@@ -74,7 +74,7 @@ readlink_stk (int fd, char const *filename,
       buffer = stack_buf;
       buffer_size = STACK_BUF_SIZE;
     }
-
+  {
   char *buf = buffer;
   idx_t buf_size_max = MIN (IDX_MAX, MIN (SSIZE_MAX, SIZE_MAX));
   idx_t buf_size = MIN (buffer_size, buf_size_max);
@@ -83,6 +83,7 @@ readlink_stk (int fd, char const *filename,
     {
       /* Attempt to read the link into the current buffer.  */
       idx_t link_length = preadlinkat (fd, filename, buf, buf_size);
+      idx_t link_size = link_length;
       if (link_length < 0)
         {
           if (buf != buffer)
@@ -93,8 +94,6 @@ readlink_stk (int fd, char const *filename,
             }
           return NULL;
         }
-
-      idx_t link_size = link_length;
 
       if (link_size < buf_size)
         {
@@ -135,6 +134,7 @@ readlink_stk (int fd, char const *filename,
 
   if (alloc->die)
     alloc->die (buf_size);
+  }
   errno = ENOMEM;
   return NULL;
 }

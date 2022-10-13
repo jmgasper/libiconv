@@ -43,11 +43,16 @@ rawmemchr (const void *s, int c_in)
 
   /* You can change this typedef to experiment with performance.  */
   typedef uintptr_t longword;
-  /* Verify that the longword type lacks padding bits.  */
-  static_assert (UINTPTR_WIDTH == UCHAR_WIDTH * sizeof (uintptr_t));
 
   const unsigned char *char_ptr;
   unsigned char c = c_in;
+  longword const *longword_ptr;
+  longword repeated_one;
+  longword repeated_c;
+  longword repeated_hibit;
+
+  /* Verify that the longword type lacks padding bits.  */
+  static_assert (UINTPTR_WIDTH == UCHAR_WIDTH * sizeof (uintptr_t));
 
   /* Handle the first few bytes by reading one byte at a time.
      Do this until CHAR_PTR is aligned on a natural longword boundary,
@@ -58,14 +63,14 @@ rawmemchr (const void *s, int c_in)
     if (*char_ptr == c)
       return (void *) char_ptr;
 
-  longword const *longword_ptr = s = char_ptr;
+  longword_ptr = s = char_ptr;
 
   /* Compute auxiliary longword values:
      repeated_one is a value which has a 1 in every byte.
      repeated_c has c in every byte.  */
-  longword repeated_one = (longword) -1 / UCHAR_MAX;
-  longword repeated_c = repeated_one * c;
-  longword repeated_hibit = repeated_one * (UCHAR_MAX / 2 + 1);
+  repeated_one = (longword) -1 / UCHAR_MAX;
+  repeated_c = repeated_one * c;
+  repeated_hibit = repeated_one * (UCHAR_MAX / 2 + 1);
 
   /* Instead of the traditional loop which tests each byte, we will
      test a longword at a time.  The tricky part is testing if any of
