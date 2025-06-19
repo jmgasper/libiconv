@@ -432,10 +432,11 @@ char *
 __realpath (const char *name, char *resolved)
 {
   struct realpath_bufs bufs;
+  char *result;
   scratch_buffer_init (&bufs.rname);
   scratch_buffer_init (&bufs.extra);
   scratch_buffer_init (&bufs.link);
-  char *result = realpath_stk (name, resolved, &bufs);
+  result = realpath_stk (name, resolved, &bufs);
   scratch_buffer_free (&bufs.link);
   scratch_buffer_free (&bufs.extra);
   scratch_buffer_free (&bufs.rname);

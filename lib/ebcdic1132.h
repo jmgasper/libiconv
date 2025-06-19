@@ -76,9 +76,10 @@ static int
 ebcdic1132_mbtowc (conv_t conv, ucs4_t *pwc, const unsigned char *s, size_t n)
 {
   unsigned char c = *s;
+  unsigned short wc;
   if (conv->isurface & ICONV_SURFACE_EBCDIC_ZOS_UNIX)
     c = swap_x15_x25 (c);
-  unsigned short wc = ebcdic1132_2uni[c];
+  wc = ebcdic1132_2uni[c];
   if (wc != 0xfffd) {
     *pwc = (ucs4_t) wc;
     return 1;

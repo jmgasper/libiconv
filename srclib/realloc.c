@@ -42,6 +42,9 @@ void *
 rpl_realloc (void *p, size_t n)
 {
   size_t n1 = n;
+# if !HAVE_MALLOC_PTRDIFF
+  ptrdiff_t signed_n;
+# endif
   void *result;
 
   if (n == 0)
@@ -85,7 +88,6 @@ rpl_realloc (void *p, size_t n)
     }
 
 # if !HAVE_MALLOC_PTRDIFF
-  ptrdiff_t signed_n;
   if (ckd_add (&signed_n, n, 0))
     {
       errno = ENOMEM;
