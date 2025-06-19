@@ -59,6 +59,7 @@ static void test_default (iconv_t cd)
       abort ();
   }
   #ifdef _LIBICONV_VERSION
+  {
   int x;
   if (iconvctl (cd, ICONV_GET_TRANSLITERATE, &x) != 0)
     abort ();
@@ -76,6 +77,7 @@ static void test_default (iconv_t cd)
     abort ();
   if (x != 0)
     abort ();
+  }
   #endif
 }
 
@@ -108,6 +110,7 @@ static void test_translit (iconv_t cd)
       abort ();
   }
   #ifdef _LIBICONV_VERSION
+  {
   int x;
   if (iconvctl (cd, ICONV_GET_TRANSLITERATE, &x) != 0)
     abort ();
@@ -125,6 +128,7 @@ static void test_translit (iconv_t cd)
     abort ();
   if (x != 0)
     abort ();
+  }
   #endif
 }
 
@@ -167,6 +171,7 @@ static void test_ignore (iconv_t cd)
       abort ();
   }
   #ifdef _LIBICONV_VERSION
+  {
   int x;
   if (iconvctl (cd, ICONV_GET_TRANSLITERATE, &x) != 0)
     abort ();
@@ -184,6 +189,7 @@ static void test_ignore (iconv_t cd)
     abort ();
   if (x != 1)
     abort ();
+  }
   #endif
 }
 
@@ -216,6 +222,7 @@ static void test_ignore_translit (iconv_t cd)
       abort ();
   }
   #ifdef _LIBICONV_VERSION
+  {
   int x;
   if (iconvctl (cd, ICONV_GET_TRANSLITERATE, &x) != 0)
     abort ();
@@ -233,6 +240,7 @@ static void test_ignore_translit (iconv_t cd)
     abort ();
   if (x != 1)
     abort ();
+  }
   #endif
 }
 
@@ -265,6 +273,7 @@ static void test_nid (iconv_t cd)
       abort ();
   }
   #ifdef _LIBICONV_VERSION
+  {
   int x;
   if (iconvctl (cd, ICONV_GET_TRANSLITERATE, &x) != 0)
     abort ();
@@ -282,6 +291,7 @@ static void test_nid (iconv_t cd)
     abort ();
   if (x != 0)
     abort ();
+  }
   #endif
 }
 
@@ -314,6 +324,7 @@ static void test_nid_translit (iconv_t cd)
       abort ();
   }
   #ifdef _LIBICONV_VERSION
+  {
   int x;
   if (iconvctl (cd, ICONV_GET_TRANSLITERATE, &x) != 0)
     abort ();
@@ -331,6 +342,7 @@ static void test_nid_translit (iconv_t cd)
     abort ();
   if (x != 0)
     abort ();
+  }
   #endif
 }
 
@@ -363,6 +375,7 @@ static void test_invd (iconv_t cd)
       abort ();
   }
   #ifdef _LIBICONV_VERSION
+  {
   int x;
   if (iconvctl (cd, ICONV_GET_TRANSLITERATE, &x) != 0)
     abort ();
@@ -380,6 +393,7 @@ static void test_invd (iconv_t cd)
     abort ();
   if (x != 0)
     abort ();
+  }
   #endif
 }
 
@@ -412,6 +426,7 @@ static void test_invd_translit (iconv_t cd)
       abort ();
   }
   #ifdef _LIBICONV_VERSION
+  {
   int x;
   if (iconvctl (cd, ICONV_GET_TRANSLITERATE, &x) != 0)
     abort ();
@@ -429,6 +444,7 @@ static void test_invd_translit (iconv_t cd)
     abort ();
   if (x != 0)
     abort ();
+  }
   #endif
 }
 
